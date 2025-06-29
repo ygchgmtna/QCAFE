@@ -87,7 +87,7 @@ def run_cafe(dataset_dir: str,
                           optim_task_similarity,
                           device=device)
 
-    trainer.fit(train_loader, epoch_num)
+    # trainer.fit(train_loader, epoch_num)
 
     if test_loader is not None:
         test_result = trainer.evaluate(test_loader)

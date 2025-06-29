@@ -46,7 +46,7 @@ class CafeTrainer(BaseTrainer):
                          clip_grad_norm, device, early_stopping)
         self.similarity_optimizer = similarity_optimizer
         self.best_f1 = 0.0
-        self.best_path = "./pth/best_model_politifact_epoch10.pth"
+        self.best_path = "pth/best_model_politifact_epoch5.pth"
 
     def _train_epoch(self, loader: DataLoader,
                      epoch: int) -> Dict[str, float]:
@@ -122,7 +122,7 @@ class CafeTrainer(BaseTrainer):
                 self.best_f1 = avg_f1
                 self.best_epoch = epoch + 1
                 dataset_name = "politifact"  # or "gossipcop" based on your dataset
-                self.best_path = f"./pth/best_model_{dataset_name}_epoch{self.best_epoch}.pth"
+                self.best_path = f"pth/best_model_{dataset_name}_epoch{self.best_epoch}.pth"
                 if avg_f1 > 0.3:
                     torch.save(self.model.state_dict(), self.best_path)
                     self.logger.info(f"Saved best model to {self.best_path} with F1: {avg_f1:.4f}")

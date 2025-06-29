@@ -30,7 +30,7 @@ args_dict = {
     #'dataset_dir': 'D:\编程软件\VScode\Project\third_year\QNLP\FaKnow-master\FaKnow-master\dataset\example\Twitter_Rumor_Detection',
     'batch_size': 64,
     'lr': 1e-3,
-    'epoch_num' : 30
+    'epoch_num' : 5
 }
 
 run(model_name, **args_dict)

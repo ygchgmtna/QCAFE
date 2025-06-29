@@ -26,3 +26,7 @@ train_epoch结果打印
 ## model 模型文件
 ### model 抽象模型
 ### cafe
+
+## tb-logs
+使用命令：tensorboard --logdir=tb_logs/
+查看训练数据图像
