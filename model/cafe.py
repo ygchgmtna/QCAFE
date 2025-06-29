@@ -7,7 +7,7 @@ from torch import Tensor
 from torch.distributions import Normal, Independent
 from torch.nn.functional import softplus
 from model.model import AbstractModel
-from model.QAttention3 import QuantumClassifier
+from model.QAttention3 import QuantumAttention
 
 
 import pennylane as qml
@@ -72,14 +72,15 @@ class CAFE(AbstractModel):
         self.encoding = _TextImageEncoder()
         self.ambiguity_module = _AmbiguityModule()
         self.uni_modal = _UnimodalModule()
-        self.cross_modal = _CrossModalModule()
+        # self.cross_modal = _CrossModalModule()
+        self.cross_modal = QuantumAttention(in_embed=64)
         self.loss_func_detection = torch.nn.CrossEntropyLoss()
-        # self.classifier = nn.Sequential(nn.Linear(feature_dim, h_dim),
-        #                                 nn.BatchNorm1d(h_dim), nn.ReLU(),
-        #                                 nn.Linear(h_dim, h_dim),
-        #                                 nn.BatchNorm1d(h_dim), nn.ReLU(),
-        #                                 nn.Linear(h_dim, 2))
-        self.classifier = QuantumClassifier()
+        self.classifier = nn.Sequential(nn.Linear(40, h_dim),
+                                        nn.BatchNorm1d(h_dim), nn.ReLU(),
+                                        nn.Linear(h_dim, h_dim),
+                                        nn.BatchNorm1d(h_dim), nn.ReLU(),
+                                        nn.Linear(h_dim, 2))
+        # self.classifier = QuantumClassifier()
         self.similarity_module = _SimilarityModule()
 
     def forward(self, text: torch.Tensor, image: torch.Tensor) -> Tensor:

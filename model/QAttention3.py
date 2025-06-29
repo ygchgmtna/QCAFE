@@ -94,7 +94,7 @@ def qmha_value(xv, score, weights_v_rot, weights_v_crx):
            [qml.expval(qml.PauliX(wires=w)) for w in [0,1,2,3]]
 
 # qLatentAttention
-class QuantumClassifier(nn.Module):
+class QuantumAttention(nn.Module):
     def __init__(self, embed_dim=4, in_embed=96):
         super().__init__()
 
@@ -139,25 +139,26 @@ class QuantumClassifier(nn.Module):
 
         self.linear = nn.Sequential(
             nn.LayerNorm(embed_dim*2),
-            nn.GELU(),
-            nn.Linear(embed_dim*2, 2)
+            nn.ReLU(),
+            # nn.Linear(embed_dim*2, 2)
         )
 
-    def forward(self, x1):
+    def forward(self, x1, x2):
         x1 = self.pre_net(x1)
+        x2 = self.pre_net(x2)
 
         outputs1 = []
-        # outputs2 = []
+        outputs2 = []
         # outputs3 = []
 
         for i in range(x1.shape[0]):
             # x1-x2 attention
-            score_1 = torch.stack(qmha_score(x1[i], x1[i],
+            score_1 = torch.stack(qmha_score(x1[i], x2[i],
                                              self.weights_q_rot1, self.weights_q_crx1,
                                              self.weights_k_rot1, self.weights_k_crx1))
             
             
-            value_1 = torch.stack(qmha_value(x1[i], torch.sqrt(score_1[:4]**2 + score_1[4:]**2),
+            value_1 = torch.stack(qmha_value(x2[i], torch.sqrt(score_1[:4]**2 + score_1[4:]**2),
                                              self.weights_v_rot1, self.weights_v_crx1))
 
             outputs1.append(value_1)
@@ -193,4 +194,5 @@ class QuantumClassifier(nn.Module):
         # out = self.dropout(out)
         # out = self.mlp(out)
         out = self.linear(outputs1)
+        # print(f"out shape: {out.shape}, out dtype: {out.dtype}")
         return out

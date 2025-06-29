@@ -91,6 +91,7 @@ def run_cafe(dataset_dir: str,
 
     if test_loader is not None:
         test_result = trainer.evaluate(test_loader)
+        trainer._show_data_size(train_loader, test_loader=test_loader)
         trainer.logger.info(f"test result: {dict2str(test_result)}")
 
 

@@ -523,7 +523,8 @@ class BaseTrainer(AbstractTrainer):
 
     def _show_data_size(self,
                         train_loader: DataLoader,
-                        validate_loader: Optional[DataLoader] = None):
+                        validate_loader: Optional[DataLoader] = None,
+                        test_loader: Optional[DataLoader] = None):
         """
         show training data size and validation data size
 
@@ -537,6 +538,9 @@ class BaseTrainer(AbstractTrainer):
         if validate_loader is not None:
             validate_set_size = len(validate_loader.dataset)
             self.logger.info(f'validation data size={validate_set_size}')
+        if test_loader is not None:
+            test_set_size = len(test_loader.dataset)
+            self.logger.info(f'test data size={test_set_size}')
 
     def __add_file_log(self, file_name: str):
         """
