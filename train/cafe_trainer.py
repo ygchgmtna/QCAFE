@@ -121,7 +121,7 @@ class CafeTrainer(BaseTrainer):
             if avg_f1 > self.best_f1:
                 self.best_f1 = avg_f1
                 self.best_epoch = epoch + 1
-                dataset_name = "politifact"  # or "gossipcop" based on your dataset
+                dataset_name = "twitter"  # or "gossipcop" based on your dataset
                 self.best_path = f"pth/best_model_{dataset_name}_epoch{self.best_epoch}.pth"
                 if avg_f1 > 0.3:
                     torch.save(self.model.state_dict(), self.best_path)

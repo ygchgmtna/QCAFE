@@ -3,9 +3,10 @@
 ## startup 程序运行入口
 支持修改参数：
 1. 数据集路径
-2. batchsize
-3. 学习率lr
-4. 训练epoch数
+2. 数据集选择
+3. batchsize
+4. 学习率lr
+5. 训练epoch数
 
 ## run 运行调用文件
 ### run 运行调用统一入口

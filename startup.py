@@ -2,7 +2,7 @@ from run.run import run
 import torch
 import numpy as np
 import os
-os.environ['TRANSFORMERS_CACHE'] = r"C:\\Users\\hp\\.cache\\huggingface"
+# os.environ['TRANSFORMERS_CACHE'] = r"D:/cuc/code/QCAFE/"
 
 
 
@@ -25,12 +25,11 @@ os.environ['TRANSFORMERS_CACHE'] = r"C:\\Users\\hp\\.cache\\huggingface"
 
 model_name = 'cafe'
 args_dict = {
-    'dataset_dir': 'C:\\Users\\hp\\Desktop\\CAFE\\data',
-    #'dataset_dir': 'D:\\编程软件\\VScode\\Project\\third_year\\QNLP\\fakenewsnet_dataset\\fakenewsnet_dataset\\Test1\\data',
-    #'dataset_dir': 'D:\编程软件\VScode\Project\third_year\QNLP\FaKnow-master\FaKnow-master\dataset\example\Twitter_Rumor_Detection',
+    'dataset_dir': 'D:/cuc/code/QCAFE/dataset',
+    "dataset_name": "twitter", # Choice of "politifact" "gossipcop" "twitter"
     'batch_size': 64,
-    'lr': 1e-3,
-    'epoch_num' : 20
+    'lr': 1e-3, 
+    'epoch_num' : 30
 }
 
 run(model_name, **args_dict)

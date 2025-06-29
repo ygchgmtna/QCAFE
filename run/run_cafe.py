@@ -16,6 +16,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("device:", device)
 
 def run_cafe(dataset_dir: str,
+             dataset_name: str = "politifact",
              batch_size=64,
              lr=1e-3,
              weight_decay=0,
@@ -43,10 +44,11 @@ def run_cafe(dataset_dir: str,
     #                        "{}/gossipcop_test_image_with_label.npz".format(dataset_dir))
 
     train_set = CafeDataset(
-        "{}/politifact_train_text_with_label.npz".format(dataset_dir),
-        "{}/politifact_train_image_with_label.npz".format(dataset_dir))
-    test_set = CafeDataset("{}/politifact_test_text_with_label.npz".format(dataset_dir),
-                           "{}/politifact_test_image_with_label.npz".format(dataset_dir))
+        "{}/{}/train_text_with_label.npz".format(dataset_dir, dataset_name),
+        "{}/{}/train_image_with_label.npz".format(dataset_dir, dataset_name))
+    test_set = CafeDataset(
+        "{}/{}/test_text_with_label.npz".format(dataset_dir, dataset_name),
+        "{}/{}/test_image_with_label.npz".format(dataset_dir, dataset_name))
     
     import numpy as np
 
@@ -87,7 +89,7 @@ def run_cafe(dataset_dir: str,
                           optim_task_similarity,
                           device=device)
 
-    # trainer.fit(train_loader, epoch_num)
+    trainer.fit(train_loader, epoch_num)
 
     if test_loader is not None:
         test_result = trainer.evaluate(test_loader)
