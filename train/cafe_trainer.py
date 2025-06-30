@@ -46,7 +46,9 @@ class CafeTrainer(BaseTrainer):
                          clip_grad_norm, device, early_stopping)
         self.similarity_optimizer = similarity_optimizer
         self.best_f1 = 0.0
-        self.best_path = "pth/best_model_politifact_epoch19.pth"
+        
+        # load the best model path
+        self.best_path = "pth/best_model_twitter_epoch1.pth"
 
     def _train_epoch(self, loader: DataLoader,
                      epoch: int) -> Dict[str, float]:
