@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 n_qubits = 4
 dev = qml.device("default.qubit", wires=n_qubits)
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 @qml.qnode(dev, interface="torch")
 def quantum_circuit(inputs, weights):
@@ -28,7 +29,7 @@ def quantum_circuit(inputs, weights):
 
 
 class QuantumClassifier(nn.Module):
-    def __init__(self, n_features=96, n_qubits=4):
+    def __init__(self, n_features=40, n_qubits=4):
         super().__init__()
         self.pre_net = nn.Linear(n_features, n_qubits)  # 输入特征到量子比特的映射
         self.q_params = nn.Parameter(torch.randn(n_qubits, 3)* 0.1)  # 3参数旋转门
