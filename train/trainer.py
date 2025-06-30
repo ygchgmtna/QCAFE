@@ -385,7 +385,8 @@ class BaseTrainer(AbstractTrainer):
 
             # learning rate scheduler
             if self.scheduler is not None:
-                self.scheduler.step()
+                if epoch!=1:  # skip first epoch
+                    self.scheduler.step()
 
         self.writer.flush()
         self.writer.close()

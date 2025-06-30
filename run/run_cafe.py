@@ -66,14 +66,18 @@ def run_cafe(dataset_dir: str,
                                             lr=lr,
                                             weight_decay=weight_decay)
 
+    # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optim_task_detection, T_0=1, T_mult=1)
+
     evaluator = Evaluator(metrics)
 
     trainer = CafeTrainer(model,
                           evaluator,
                           optim_task_detection,
                           optim_task_similarity,
+                        #   scheduler=scheduler,
                           device=device)
-
+    
+    # 训练入口
     trainer.fit(train_loader, epoch_num)
 
     if test_loader is not None:

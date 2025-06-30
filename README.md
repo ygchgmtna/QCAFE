@@ -17,7 +17,8 @@
 2. 优化器
 3. 训练入口 trainer.fit
 4. 测试入口
-
+新增：
+1. 学习率调度 scheduler = CosineAnnealingWarmRestarts(optimizer, T_0=1, T_mult=1)  //T_0=1表示每epoch内变化 
 
 ## train 训练步骤文件
 ### trainer 训练通用步骤
