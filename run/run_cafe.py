@@ -37,28 +37,13 @@ def run_cafe(dataset_dir: str,
         device (str): device to run model, default='cuda:0'
     """
     # ---  Load Data  ---
-    # train_set = CafeDataset(
-    #     "{}/gossipcop_train_text_with_label.npz".format(dataset_dir),
-    #     "{}/gossipcop_train_image_with_label.npz".format(dataset_dir))
-    # test_set = CafeDataset("{}/gossipcop_test_text_with_label.npz".format(dataset_dir),
-    #                        "{}/gossipcop_test_image_with_label.npz".format(dataset_dir))
-
     train_set = CafeDataset(
         "{}/{}/train_text_with_label.npz".format(dataset_dir, dataset_name),
         "{}/{}/train_image_with_label.npz".format(dataset_dir, dataset_name))
     test_set = CafeDataset(
         "{}/{}/test_text_with_label.npz".format(dataset_dir, dataset_name),
-        "{}/{}/test_image_with_label.npz".format(dataset_dir, dataset_name))
-    
-    import numpy as np
-
-    # text_data = np.load("{}/politifact_test_text_with_label.npz".format(dataset_dir))
-    # image_data = np.load("{}/politifact_test_image_with_label.npz".format(dataset_dir))
-
-    # print(f"🔍 Text data shape: {text_data['data'].shape}, dtype: {text_data['data'].dtype}")
-    # print(f"🔍 Image data shape: {image_data['data'].shape}, dtype: {image_data['data'].dtype}")
-
-                               
+        "{}/{}/test_image_with_label.npz".format(dataset_dir, dataset_name)) 
+                                   
     train_loader = DataLoader(train_set,
                               batch_size=batch_size,
                               shuffle=True,
