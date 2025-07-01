@@ -13,13 +13,18 @@ def quantum_circuit(inputs, weights):
     # 编码输入
     # for i in range(n_qubits):
     #     qml.RY(inputs[i], wires=i)
-    qml.AngleEmbedding(inputs, wires=[0, 1, 2, 3], rotation="Y")
+    qml.AngleEmbedding(inputs, wires=[0, 1, 2, 3], rotation="X")
     # qml.AmplitudeEmbedding(inputs, wires=[0, 1, 2, 3],normalize=True)
-    
+
+    def zxz(idx, wire):
+        qml.RZ(weights[idx], wires=wire)
+        qml.RX(weights[idx + 1], wires=wire)
+        qml.RZ(weights[idx + 2], wires=wire)
+
     # 参数化旋转层
     for i in range(n_qubits):
-        qml.Rot(*weights[i], wires=i)
-    
+        zxz(i * 3, i)
+
     # 全连接门
     for i in range(n_qubits - 1):
         qml.CNOT(wires=[i, i+1])
@@ -32,7 +37,7 @@ class QuantumClassifier(nn.Module):
     def __init__(self, n_features=40, n_qubits=4):
         super().__init__()
         self.pre_net = nn.Linear(n_features, n_qubits)  # 输入特征到量子比特的映射
-        self.q_params = nn.Parameter(torch.randn(n_qubits, 3)* 0.1)  # 3参数旋转门
+        self.q_params = nn.Parameter(torch.randn(n_qubits*3)* 0.1)  # 3参数旋转门
         self.post_net = nn.Linear(4, 2) # 输出 fake / real
 
     def forward(self, x):

@@ -24,6 +24,7 @@ def run_cafe(dataset_dir: str,
              epoch_num=2,
              metrics: List = None,
              pretrained_path=None,
+             best_path: str = None,
              device=device):
     """
     run CAFE
@@ -82,6 +83,7 @@ def run_cafe(dataset_dir: str,
                           optim_task_detection,
                           optim_task_similarity,
                           scheduler=scheduler,
+                          best_path=best_path,
                           device=device)
     
     trainer.logger.info(f"dataset: {dataset_name}, bs={batch_size}, lr={lr}")
