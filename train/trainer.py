@@ -282,7 +282,8 @@ class BaseTrainer(AbstractTrainer):
         return score, result
 
     @torch.no_grad()
-    def evaluate(self, loader: DataLoader):
+    def evaluate(self, loader: DataLoader,
+                 pretrained_path: Optional[str] = None):
         """
         Evaluate model performance on testing or validation data.
 
@@ -293,9 +294,13 @@ class BaseTrainer(AbstractTrainer):
         Returns:
             Dict[str, float]: evaluation metrics
         """
-        
-        self.model.load_state_dict(torch.load(self.best_path, map_location=self.device))
-        self.logger.info(f"Loaded best model from {self.best_path}")
+        if pretrained_path is not None:
+            self.model.load_state_dict(torch.load(pretrained_path, map_location=self.device, weights_only=True))
+            self.logger.info(f"Loaded pretrained model from {pretrained_path}")
+        else:
+            self.model.load_state_dict(torch.load(self.best_path, map_location=self.device, weights_only=True))
+            self.logger.info(f"Loaded best model from {self.best_path}")
+            
         self.model.eval()
 
         outputs = []
@@ -342,7 +347,7 @@ class BaseTrainer(AbstractTrainer):
 
         result_file_name = f"{self.model.__class__.__name__}-{now2str()}"
 
-        print(os.getcwd())
+        # print(os.getcwd())
 
         # log
         tb_logs_path = f"./tb_logs/{result_file_name}"
@@ -351,8 +356,8 @@ class BaseTrainer(AbstractTrainer):
         self.writer = SummaryWriter(tb_logs_path)
         self.__add_file_log(result_file_name)
 
-        self.logger.info(f'Tensorboard log is saved in {tb_logs_path}')
-        self.logger.info(f'log file is saved in logs/{tb_logs_path}.log\n')
+        # self.logger.info(f'Tensorboard log is saved in {tb_logs_path}')
+        # self.logger.info(f'log file is saved in logs/{tb_logs_path}.log\n')
         self._show_data_size(train_loader, validate_loader)
         self.logger.info('----start training-----\n')
 
@@ -533,7 +538,6 @@ class BaseTrainer(AbstractTrainer):
             train_loader (DataLoader): training data
             validate_loader (DataLoader): validation data. Defaults=None.
         """
-
         train_set_size = len(train_loader.dataset)
         self.logger.info(f'training data size={train_set_size}')
         if validate_loader is not None:

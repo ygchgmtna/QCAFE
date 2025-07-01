@@ -7,7 +7,7 @@ from torch import Tensor
 from torch.distributions import Normal, Independent
 from torch.nn.functional import softplus
 from model.model import AbstractModel
-from model.QAttention3 import QuantumAttention
+from model.QA import QuantumAttention
 from model.QClassifier import QuantumClassifier
 
 
@@ -38,12 +38,12 @@ class CAFE(AbstractModel):
         # self.cross_modal = _CrossModalModule()
         self.cross_modal = QuantumAttention(in_embed=64)
         self.loss_func_detection = torch.nn.CrossEntropyLoss()
-        # self.classifier = nn.Sequential(nn.Linear(40, h_dim),
-        #                                 nn.BatchNorm1d(h_dim), nn.ReLU(),
-        #                                 nn.Linear(h_dim, h_dim),
-        #                                 nn.BatchNorm1d(h_dim), nn.ReLU(),
-        #                                 nn.Linear(h_dim, 2))
-        self.classifier = QuantumClassifier()
+        self.classifier = nn.Sequential(nn.Linear(40, h_dim),
+                                        nn.BatchNorm1d(h_dim), nn.ReLU(),
+                                        nn.Linear(h_dim, h_dim),
+                                        nn.BatchNorm1d(h_dim), nn.ReLU(),
+                                        nn.Linear(h_dim, 2))
+        # self.classifier = QuantumClassifier()
         self.similarity_module = _SimilarityModule()
 
     def forward(self, text: torch.Tensor, image: torch.Tensor) -> Tensor:
@@ -210,6 +210,8 @@ class _SimilarityModule(AbstractModel):
             nn.BatchNorm1d(self.sim_classifier_dim),
             nn.Linear(self.sim_classifier_dim, 64), nn.BatchNorm1d(64),
             nn.ReLU(), nn.Linear(64, 2))
+        # self.sim_classifier = QuantumClassifier(n_features=self.sim_classifier_dim,
+        #                                         n_qubits=4)
 
     def forward(self, text: Tensor, image: Tensor):
         """

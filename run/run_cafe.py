@@ -17,11 +17,13 @@ print("device:", device)
 
 def run_cafe(dataset_dir: str,
              dataset_name: str = "politifact",
+             mode: str = "train",
              batch_size=64,
              lr=1e-3,
              weight_decay=0,
              epoch_num=2,
              metrics: List = None,
+             pretrained_path=None,
              device=device):
     """
     run CAFE
@@ -56,6 +58,8 @@ def run_cafe(dataset_dir: str,
 
     model = CAFE().to(device)
 
+
+
     optim_task_similarity = torch.optim.Adam(
         model.similarity_module.parameters(), lr=lr, weight_decay=weight_decay)
 
@@ -65,7 +69,10 @@ def run_cafe(dataset_dir: str,
     optim_task_detection = torch.optim.Adam(base_params,
                                             lr=lr,
                                             weight_decay=weight_decay)
-
+    
+    def lr_lambda(epoch):
+        return 1.0 if epoch < 1 else 1e-5 / lr  # epoch >= 1 时变为 1e-5
+    scheduler = torch.optim.lr_scheduler.LambdaLR(optim_task_detection, lr_lambda)
     # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optim_task_detection, T_0=1, T_mult=1)
 
     evaluator = Evaluator(metrics)
@@ -74,14 +81,28 @@ def run_cafe(dataset_dir: str,
                           evaluator,
                           optim_task_detection,
                           optim_task_similarity,
-                        #   scheduler=scheduler,
+                          scheduler=scheduler,
                           device=device)
     
+    trainer.logger.info(f"dataset: {dataset_name}, bs={batch_size}, lr={lr}")
     # 训练入口
-    trainer.fit(train_loader, epoch_num)
+    if mode == "train":        
+        if pretrained_path is not None:
+            state_dict = torch.load(pretrained_path, map_location=device, weights_only=True)
+            model.load_state_dict(state_dict, strict=False)
+            trainer.logger.info(f"Loaded pretrained model from {pretrained_path}")
 
-    if test_loader is not None:
-        test_result = trainer.evaluate(test_loader)
+        trainer.fit(train_loader, epoch_num)
+
+        if test_loader is not None:
+            test_result = trainer.evaluate(test_loader)
+            trainer._show_data_size(train_loader, test_loader=test_loader)
+            trainer.logger.info(f"test result: {dict2str(test_result)}")
+    # 测试入口
+    elif mode == "test":
+        if pretrained_path is None:
+            raise ValueError("pretrained_path must be provided for testing mode.")
+        test_result = trainer.evaluate(test_loader, pretrained_path=pretrained_path)
         trainer._show_data_size(train_loader, test_loader=test_loader)
         trainer.logger.info(f"test result: {dict2str(test_result)}")
 

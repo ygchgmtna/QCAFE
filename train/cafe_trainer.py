@@ -47,9 +47,6 @@ class CafeTrainer(BaseTrainer):
         self.similarity_optimizer = similarity_optimizer
         self.best_f1 = 0.0
 
-        # load the best model path
-        self.best_path = "pth/best_model_twitter_epoch2.pth"
-
     def _train_epoch(self, loader: DataLoader,
                      epoch: int) -> Dict[str, float]:
         """
@@ -65,7 +62,7 @@ class CafeTrainer(BaseTrainer):
                  return a dict of losses with loss name as key.
          """
         self.model.train()
-        
+
         total_acc, total_f1, count = 0.0, 0.0, 0
         with tqdm(enumerate(loader),
                   total=len(loader),
@@ -123,8 +120,8 @@ class CafeTrainer(BaseTrainer):
             if avg_f1 > self.best_f1:
                 self.best_f1 = avg_f1
                 self.best_epoch = epoch + 1
-                dataset_name = "twitter"  # or "gossipcop" based on your dataset
-                self.best_path = f"pth/best_model_{dataset_name}_epoch{self.best_epoch}.pth"
+                dataset_name = "twitter"  # Choice of "politifact" "gossipcop" "twitter"
+                self.best_path = f"pth/zxz_{dataset_name}_epoch{self.best_epoch}.pth"
                 if avg_f1 > 0.3:
                     torch.save(self.model.state_dict(), self.best_path)
                     self.logger.info(f"Saved best model to {self.best_path} with F1: {avg_f1:.4f}")
