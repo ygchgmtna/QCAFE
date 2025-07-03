@@ -30,6 +30,8 @@ train_epoch结果打印
 ## model 模型文件
 ### model 抽象模型
 ### cafe
+### QAttention3 原网络
+### QA 新网络
 
 ## tb-logs
 使用命令：tensorboard --logdir=tb_logs/

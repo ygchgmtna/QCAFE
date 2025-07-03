@@ -27,7 +27,8 @@ class CafeTrainer(BaseTrainer):
                  scheduler: Optional[_LRScheduler] = None,
                  clip_grad_norm: Optional[Dict[str, Any]] = None,
                  device=device,
-                 early_stopping: Optional[EarlyStopping] = None):
+                 early_stopping: Optional[EarlyStopping] = None,
+                 best_path: Optional[str] = None):
         """
         Args:
             model (CAFE): the first faknow abstract model to train
@@ -46,6 +47,10 @@ class CafeTrainer(BaseTrainer):
                          clip_grad_norm, device, early_stopping)
         self.similarity_optimizer = similarity_optimizer
         self.best_f1 = 0.0
+        if best_path is not None:
+            self.base_path = os.path.join("pth", best_path)
+        else:
+            self.base_path = os.path.join("pth", "best_model")
 
     def _train_epoch(self, loader: DataLoader,
                      epoch: int) -> Dict[str, float]:
@@ -117,13 +122,15 @@ class CafeTrainer(BaseTrainer):
             # 保存模型
             if not os.path.isdir("pth"):
                 os.makedirs("pth")
+
             if avg_f1 > self.best_f1:
                 self.best_f1 = avg_f1
                 self.best_epoch = epoch + 1
-                dataset_name = "twitter"  # Choice of "politifact" "gossipcop" "twitter"
-                self.best_path = f"pth/zxz_{dataset_name}_epoch{self.best_epoch}.pth"
+                
                 if avg_f1 > 0.3:
-                    torch.save(self.model.state_dict(), self.best_path)
-                    self.logger.info(f"Saved best model to {self.best_path} with F1: {avg_f1:.4f}")
+                    final_path =f"{self.base_path}_epoch{self.best_epoch}.pth"
+                    torch.save(self.model.state_dict(), final_path)
+                    self.logger.info(f"Saved best model to {final_path} with F1: {avg_f1:.4f}")
+                    self.best_path = final_path
 
-            return loss
+        return loss

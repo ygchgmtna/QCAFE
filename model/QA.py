@@ -41,16 +41,16 @@ def initQKV_on_wires(rot_params, crx_params, offset):
     qml.CNOT(wires=[offset + 2, offset + 3])  
     qml.CNOT(wires=[offset + 3, offset + 0])
 
-    # 第 2 层 ZXZ + CRX + CNOT Ring
-    # zxz(12, offset + 0)
-    # zxz(15, offset + 1)
-    # zxz(18, offset + 2)
-    # zxz(21, offset + 3)
-    
+    # 第 2 层 ZXZ + CRX + CNOT Ring    
     qml.CNOT(wires=[offset + 0, offset + 3])
     qml.CNOT(wires=[offset + 1, offset + 0])
     qml.CNOT(wires=[offset + 2, offset + 1])
     qml.CNOT(wires=[offset + 3, offset + 2])
+
+    zxz(12, offset + 0)
+    zxz(15, offset + 1)
+    zxz(18, offset + 2)
+    zxz(21, offset + 3)
 
 
 # qmha_score
