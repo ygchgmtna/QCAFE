@@ -7,7 +7,7 @@ from torch import Tensor
 from torch.distributions import Normal, Independent
 from torch.nn.functional import softplus
 from model.model import AbstractModel
-from model.QA import QuantumAttention
+from model.QA_s import QuantumAttention
 from model.QClassifier import QuantumClassifier
 
 
