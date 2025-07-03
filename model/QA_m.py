@@ -36,15 +36,15 @@ def initQKV_on_wires(rot_params, crx_params, offset):
     qml.CRX(crx_params[6], wires=[offset + 2, offset + 1])
     qml.CRX(crx_params[7], wires=[offset + 3, offset + 2])
     
-    qml.CNOT(wires=[offset + 0, offset + 1])  
-    qml.CNOT(wires=[offset + 1, offset + 2])     
-    qml.CNOT(wires=[offset + 2, offset + 3])  
-    qml.CNOT(wires=[offset + 3, offset + 0])
-
-    qml.CNOT(wires=[offset + 0, offset + 3])
+    qml.CNOT(wires=[offset + 0, offset + 3])  
+    qml.CNOT(wires=[offset + 3, offset + 2])     
+    qml.CNOT(wires=[offset + 2, offset + 1])  
     qml.CNOT(wires=[offset + 1, offset + 0])
-    qml.CNOT(wires=[offset + 2, offset + 1])
-    qml.CNOT(wires=[offset + 3, offset + 2])
+
+    # qml.CNOT(wires=[offset + 0, offset + 3])
+    # qml.CNOT(wires=[offset + 1, offset + 0])
+    # qml.CNOT(wires=[offset + 2, offset + 1])
+    # qml.CNOT(wires=[offset + 3, offset + 2])
 
     zxz(12, offset + 0)
     zxz(15, offset + 1)
@@ -54,7 +54,7 @@ def initQKV_on_wires(rot_params, crx_params, offset):
 
 # qmha_score
 @qml.qnode(dev_score, interface="torch", diff_method="backprop")
-def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_crx):
+def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_crx, weights_cross_crx):
 
     qml.AngleEmbedding(xq, wires=[0, 1, 2, 3])
     initQKV_on_wires(weights_q_rot, weights_q_crx, offset=0)
@@ -62,10 +62,20 @@ def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_cr
     qml.AngleEmbedding(xk, wires=[0, 1, 2, 3])
     initQKV_on_wires(weights_k_rot, weights_k_crx, offset=4)
 
-    qml.CNOT(wires=[0, 4])
-    qml.CNOT(wires=[1, 5])
-    qml.CNOT(wires=[2, 6])
-    qml.CNOT(wires=[3, 7])
+    qml.CRX(weights_cross_crx[0], wires=[0, 4])
+    qml.CRX(weights_cross_crx[1], wires=[1, 5])
+    qml.CRX(weights_cross_crx[2], wires=[2, 6])
+    qml.CRX(weights_cross_crx[3], wires=[3, 7])
+
+    # qml.CNOT(wires=[0, 4])
+    # qml.CNOT(wires=[1, 5])
+    # qml.CNOT(wires=[2, 6])
+    # qml.CNOT(wires=[3, 7])
+
+    qml.CNOT(wires=[4, 7])
+    qml.CNOT(wires=[7, 6])
+    qml.CNOT(wires=[6, 5])
+    qml.CNOT(wires=[5, 4])
 
     return [qml.expval(qml.PauliZ(wires=w)) for w in [4,5,6,7]] + \
            [qml.expval(qml.PauliX(wires=w)) for w in [4,5,6,7]]
@@ -106,6 +116,7 @@ class QuantumAttention(nn.Module):
         self.weights_q_crx = nn.Parameter(torch.randn(8) * 0.1)
         self.weights_k_crx = nn.Parameter(torch.randn(8) * 0.1)
         self.weights_v_crx = nn.Parameter(torch.randn(8) * 0.1)
+        self.weights_cross_crx = nn.Parameter(torch.randn(4) * 0.1)
 
         # expval 结果 4 + 4 = 8 per attention
         self.norm = nn.LayerNorm(24)
@@ -136,9 +147,8 @@ class QuantumAttention(nn.Module):
             # x1-x2 attention
             score_1 = torch.stack(qmha_score(x1[i], x2[i],
                                              self.weights_q_rot, self.weights_q_crx,
-                                             self.weights_k_rot, self.weights_k_crx))
-            
-            
+                                             self.weights_k_rot, self.weights_k_crx, 
+                                             self.weights_cross_crx))
             value_1 = torch.stack(qmha_value(x2[i], torch.sqrt(score_1[:4]**2 + score_1[4:]**2),
                                              self.weights_v_rot, self.weights_v_crx))
 
