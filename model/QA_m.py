@@ -31,10 +31,10 @@ def initQKV_on_wires(rot_params, crx_params, offset):
     qml.CRX(crx_params[2], wires=[offset + 2, offset + 3])
     qml.CRX(crx_params[3], wires=[offset + 3, offset + 0])
 
-    qml.CRX(crx_params[4], wires=[offset + 0, offset + 3])
-    qml.CRX(crx_params[5], wires=[offset + 1, offset + 0])
-    qml.CRX(crx_params[6], wires=[offset + 2, offset + 1])
-    qml.CRX(crx_params[7], wires=[offset + 3, offset + 2])
+    # qml.CRX(crx_params[4], wires=[offset + 0, offset + 3])
+    # qml.CRX(crx_params[5], wires=[offset + 1, offset + 0])
+    # qml.CRX(crx_params[6], wires=[offset + 2, offset + 1])
+    # qml.CRX(crx_params[7], wires=[offset + 3, offset + 2])
     
     qml.CNOT(wires=[offset + 0, offset + 3])  
     qml.CNOT(wires=[offset + 3, offset + 2])     
@@ -67,18 +67,23 @@ def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_cr
     qml.CRX(weights_cross_crx[2], wires=[2, 6])
     qml.CRX(weights_cross_crx[3], wires=[3, 7])
 
-    # qml.CNOT(wires=[0, 4])
-    # qml.CNOT(wires=[1, 5])
-    # qml.CNOT(wires=[2, 6])
-    # qml.CNOT(wires=[3, 7])
+    qml.CRX(weights_cross_crx[4], wires=[4, 0])
+    qml.CRX(weights_cross_crx[5], wires=[5, 1])
+    qml.CRX(weights_cross_crx[6], wires=[6, 2])
+    qml.CRX(weights_cross_crx[7], wires=[7, 3])
 
-    qml.CNOT(wires=[4, 7])
-    qml.CNOT(wires=[7, 6])
-    qml.CNOT(wires=[6, 5])
-    qml.CNOT(wires=[5, 4])
+    # CNOT 双向交叉（Q ↔ K）
+    qml.CNOT(wires=[0, 4])
+    qml.CNOT(wires=[4, 0])
+    qml.CNOT(wires=[1, 5])
+    qml.CNOT(wires=[5, 1])
+    qml.CNOT(wires=[2, 6])
+    qml.CNOT(wires=[6, 2])
+    qml.CNOT(wires=[3, 7])
+    qml.CNOT(wires=[7, 3])
 
-    return [qml.expval(qml.PauliZ(wires=w)) for w in [4,5,6,7]] + \
-           [qml.expval(qml.PauliX(wires=w)) for w in [4,5,6,7]]
+    return [qml.expval(qml.PauliZ(wires=w)) for w in [1,2,3,4]] + \
+           [qml.expval(qml.PauliX(wires=w)) for w in [1,2,3,4]] 
 
 # qmha_value
 @qml.qnode(dev_value, interface="torch", diff_method="backprop")
@@ -116,7 +121,7 @@ class QuantumAttention(nn.Module):
         self.weights_q_crx = nn.Parameter(torch.randn(8) * 0.1)
         self.weights_k_crx = nn.Parameter(torch.randn(8) * 0.1)
         self.weights_v_crx = nn.Parameter(torch.randn(8) * 0.1)
-        self.weights_cross_crx = nn.Parameter(torch.randn(4) * 0.1)
+        self.weights_cross_crx = nn.Parameter(torch.randn(8) * 0.1)
 
         # expval 结果 4 + 4 = 8 per attention
         self.norm = nn.LayerNorm(24)

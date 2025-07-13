@@ -10,13 +10,13 @@ args_dict = {
     'dataset_dir': './dataset',
     'dataset_name': dataset_name, 
     'mode': 'test',  # Mode can be 'train' or 'test'
-    'pretrained_path': f"pth/zxz2+crx_{dataset_name}_epoch2.pth",  # Path to the pretrained model
+    'pretrained_path': f"pth/qam_{dataset_name}_epoch2.pth",  # Path to the pretrained model
     # 'pretrained_path':"pth/best_model_twitter_88_bs=64.pth",
     'batch_size': 64,
     'lr': 1e-3, 
     'epoch_num' : 5,
     # 'best_path': f"zxz2+crx+q_{dataset_name}",  # Path to save the best model
-    'best_path': f"classic_{dataset_name}"
+    'best_path': f"qas_{dataset_name}"
 }
 
 run(model_name, **args_dict)
