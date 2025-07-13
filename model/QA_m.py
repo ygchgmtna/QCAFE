@@ -46,15 +46,19 @@ def initQKV_on_wires(rot_params, crx_params, offset):
     # qml.CNOT(wires=[offset + 2, offset + 1])
     # qml.CNOT(wires=[offset + 3, offset + 2])
 
-    zxz(12, offset + 0)
-    zxz(15, offset + 1)
-    zxz(18, offset + 2)
-    zxz(21, offset + 3)
+    # zxz(12, offset + 0)
+    # zxz(15, offset + 1)
+    # zxz(18, offset + 2)
+    # zxz(21, offset + 3)
 
 
 # qmha_score
 @qml.qnode(dev_score, interface="torch", diff_method="backprop")
-def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_crx, weights_cross_crx):
+def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_crx, weights_cross_rot, weights_cross_crx):
+    def zxz(idx, wire):
+        qml.RZ(weights_cross_rot[idx], wires=wire)
+        qml.RX(weights_cross_rot[idx + 1], wires=wire)
+        qml.RZ(weights_cross_rot[idx + 2], wires=wire)
 
     qml.AngleEmbedding(xq, wires=[0, 1, 2, 3])
     initQKV_on_wires(weights_q_rot, weights_q_crx, offset=0)
@@ -81,6 +85,11 @@ def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_cr
     qml.CNOT(wires=[6, 2])
     qml.CNOT(wires=[3, 7])
     qml.CNOT(wires=[7, 3])
+
+    zxz(0, 0)
+    zxz(3, 1)
+    zxz(6, 2)
+    zxz(9, 3)
 
     return [qml.expval(qml.PauliZ(wires=w)) for w in [1,2,3,4]] + \
            [qml.expval(qml.PauliX(wires=w)) for w in [1,2,3,4]] 
@@ -116,6 +125,7 @@ class QuantumAttention(nn.Module):
         self.weights_q_rot = nn.Parameter(torch.empty(24).uniform_(-np.pi / 2, np.pi / 2))
         self.weights_k_rot = nn.Parameter(torch.empty(24).uniform_(-np.pi / 2, np.pi / 2))
         self.weights_v_rot = nn.Parameter(torch.empty(24).uniform_(-np.pi / 2, np.pi / 2))
+        self.weights_cross_rot = nn.Parameter(torch.empty(12).uniform_(-np.pi / 2, np.pi / 2))
 
         # CRX θ 参数 → 4 个，1 轮
         self.weights_q_crx = nn.Parameter(torch.randn(8) * 0.1)
@@ -153,7 +163,7 @@ class QuantumAttention(nn.Module):
             score_1 = torch.stack(qmha_score(x1[i], x2[i],
                                              self.weights_q_rot, self.weights_q_crx,
                                              self.weights_k_rot, self.weights_k_crx, 
-                                             self.weights_cross_crx))
+                                             self.weights_cross_rot, self.weights_cross_crx))
             value_1 = torch.stack(qmha_value(x2[i], torch.sqrt(score_1[:4]**2 + score_1[4:]**2),
                                              self.weights_v_rot, self.weights_v_crx))
 
