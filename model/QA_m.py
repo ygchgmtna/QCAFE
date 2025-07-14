@@ -30,26 +30,11 @@ def initQKV_on_wires(rot_params, crx_params, offset):
     qml.CRX(crx_params[1], wires=[offset + 1, offset + 2])
     qml.CRX(crx_params[2], wires=[offset + 2, offset + 3])
     qml.CRX(crx_params[3], wires=[offset + 3, offset + 0])
-
-    # qml.CRX(crx_params[4], wires=[offset + 0, offset + 3])
-    # qml.CRX(crx_params[5], wires=[offset + 1, offset + 0])
-    # qml.CRX(crx_params[6], wires=[offset + 2, offset + 1])
-    # qml.CRX(crx_params[7], wires=[offset + 3, offset + 2])
     
     qml.CNOT(wires=[offset + 0, offset + 3])  
     qml.CNOT(wires=[offset + 3, offset + 2])     
     qml.CNOT(wires=[offset + 2, offset + 1])  
     qml.CNOT(wires=[offset + 1, offset + 0])
-
-    # qml.CNOT(wires=[offset + 0, offset + 3])
-    # qml.CNOT(wires=[offset + 1, offset + 0])
-    # qml.CNOT(wires=[offset + 2, offset + 1])
-    # qml.CNOT(wires=[offset + 3, offset + 2])
-
-    # zxz(12, offset + 0)
-    # zxz(15, offset + 1)
-    # zxz(18, offset + 2)
-    # zxz(21, offset + 3)
 
 
 # qmha_score
@@ -96,7 +81,7 @@ def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_cr
 
 # qmha_value
 @qml.qnode(dev_value, interface="torch", diff_method="backprop")
-def qmha_value(xv, score, weights_v_rot, weights_v_crx):
+def qmha_value(xv, score, weights_v_rot, weights_v_crx, weights_final_crx):
 
     qml.AngleEmbedding(xv, wires=[0, 1, 2, 3])
     initQKV_on_wires(weights_v_rot, weights_v_crx, offset=0)
@@ -105,6 +90,12 @@ def qmha_value(xv, score, weights_v_rot, weights_v_crx):
     for i, w in enumerate([0, 1, 2, 3]):
         # qml.RZ(score[i], wires=w)
         qml.RX(torch.tanh(score[i]) * c, wires=w)
+
+    # CRX 最终交叉
+    qml.CRX(weights_final_crx[0], wires=[0, 1])
+    qml.CRX(weights_final_crx[1], wires=[1, 2])
+    qml.CRX(weights_final_crx[2], wires=[2, 3])
+    qml.CRX(weights_final_crx[3], wires=[3, 0])
 
     qml.CNOT(wires=[0, 1])
     qml.CNOT(wires=[1, 2])
@@ -132,6 +123,7 @@ class QuantumAttention(nn.Module):
         self.weights_k_crx = nn.Parameter(torch.randn(8) * 0.1)
         self.weights_v_crx = nn.Parameter(torch.randn(8) * 0.1)
         self.weights_cross_crx = nn.Parameter(torch.randn(8) * 0.1)
+        self.weights_final_crx = nn.Parameter(torch.randn(8) * 0.1)
 
         # expval 结果 4 + 4 = 8 per attention
         self.norm = nn.LayerNorm(24)
@@ -165,7 +157,7 @@ class QuantumAttention(nn.Module):
                                              self.weights_k_rot, self.weights_k_crx, 
                                              self.weights_cross_rot, self.weights_cross_crx))
             value_1 = torch.stack(qmha_value(x2[i], torch.sqrt(score_1[:4]**2 + score_1[4:]**2),
-                                             self.weights_v_rot, self.weights_v_crx))
+                                             self.weights_v_rot, self.weights_v_crx, self.weights_final_crx))
 
             outputs1.append(value_1)
 
