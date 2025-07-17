@@ -77,8 +77,8 @@ def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_cr
     zxz(6, 2)
     zxz(9, 3)
 
-    return [qml.expval(qml.PauliZ(wires=w)) for w in [1,2,3,4]] + \
-           [qml.expval(qml.PauliX(wires=w)) for w in [1,2,3,4]] 
+    return [qml.expval(qml.PauliZ(wires=w)) for w in [0,1,2,3]] + \
+           [qml.expval(qml.PauliX(wires=w)) for w in [0,1,2,3]] 
 
 # qmha_value
 @qml.qnode(dev_value, interface="torch", diff_method="backprop")
