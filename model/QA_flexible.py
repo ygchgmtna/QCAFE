@@ -29,6 +29,11 @@ def initQKV_on_wires(rot_params, crx_params, *, offset=0): # 星号 * 表示之�
         control = offset + i
         target = offset + (i + 1) % qubits
         qml.CNOT(wires=[control, target])
+        
+    for i in range(qubits):
+        control = offset + i
+        target = offset + (i + 1) % qubits
+        qml.CNOT(wires=[control, target])
 
 # qmha_score
 @qml.qnode(dev_score, interface="torch", diff_method="backprop")

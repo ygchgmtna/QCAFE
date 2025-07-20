@@ -13,6 +13,7 @@ from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
 from evaluate.evaluator import Evaluator
+from evaluate.metrics import classification_report_by_class
 from model.model import AbstractModel
 from utils.util import (dict2str, seconds2str, now2str, check_loss_type,
                                EarlyStopping)
@@ -309,8 +310,17 @@ class BaseTrainer(AbstractTrainer):
             batch_data = self._move_data_to_device(batch_data)
             outputs.append(self.model.predict(batch_data))
             labels.append(batch_data['label'])
-        return self.evaluator.evaluate(torch.concat(outputs),
-                                       torch.concat(labels))
+
+        y_pred = torch.concat(outputs)
+        y_true = torch.concat(labels)
+
+        # 打印分类报告
+        report = classification_report_by_class(y_pred, y_true)
+        self.logger.info("\n" + report)
+
+        return self.evaluator.evaluate(y_pred, y_true)
+        # return self.evaluator.evaluate(torch.concat(outputs),
+        #                                torch.concat(labels))
 
     def fit(self,
             train_loader: DataLoader,

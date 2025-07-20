@@ -30,16 +30,26 @@ def initQKV_on_wires(rot_params, crx_params, offset):
     qml.CRX(crx_params[1], wires=[offset + 1, offset + 2])
     qml.CRX(crx_params[2], wires=[offset + 2, offset + 3])
     qml.CRX(crx_params[3], wires=[offset + 3, offset + 0])
+
+    # qml.CRX(crx_params[4], wires=[offset + 0, offset + 3])
+    # qml.CRX(crx_params[5], wires=[offset + 1, offset + 0])
+    # qml.CRX(crx_params[6], wires=[offset + 2, offset + 1])
+    # qml.CRX(crx_params[7], wires=[offset + 3, offset + 2])
     
     qml.CNOT(wires=[offset + 0, offset + 3])  
     qml.CNOT(wires=[offset + 3, offset + 2])     
     qml.CNOT(wires=[offset + 2, offset + 1])  
     qml.CNOT(wires=[offset + 1, offset + 0])
 
-    qml.CNOT(wires=[offset + 0, offset + 3])  
-    qml.CNOT(wires=[offset + 3, offset + 2])     
-    qml.CNOT(wires=[offset + 2, offset + 1])  
-    qml.CNOT(wires=[offset + 1, offset + 0])
+    # qml.CNOT(wires=[offset + 0, offset + 3])
+    # qml.CNOT(wires=[offset + 1, offset + 0])
+    # qml.CNOT(wires=[offset + 2, offset + 1])
+    # qml.CNOT(wires=[offset + 3, offset + 2])
+
+    # zxz(12, offset + 0)
+    # zxz(15, offset + 1)
+    # zxz(18, offset + 2)
+    # zxz(21, offset + 3)
 
 
 # qmha_score
@@ -56,7 +66,6 @@ def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_cr
     qml.AngleEmbedding(xk, wires=[0, 1, 2, 3])
     initQKV_on_wires(weights_k_rot, weights_k_crx, offset=4)
 
-    # CRX 双向交叉
     qml.CRX(weights_cross_crx[0], wires=[0, 4])
     qml.CRX(weights_cross_crx[1], wires=[1, 5])
     qml.CRX(weights_cross_crx[2], wires=[2, 6])
@@ -82,8 +91,8 @@ def qmha_score(xq, xk, weights_q_rot, weights_q_crx, weights_k_rot, weights_k_cr
     zxz(6, 2)
     zxz(9, 3)
 
-    return [qml.expval(qml.PauliZ(wires=w)) for w in [0,1,2,3]] + \
-           [qml.expval(qml.PauliX(wires=w)) for w in [0,1,2,3]] 
+    return [qml.expval(qml.PauliZ(wires=w)) for w in [1,2,3,4]] + \
+           [qml.expval(qml.PauliX(wires=w)) for w in [1,2,3,4]] 
 
 # qmha_value
 @qml.qnode(dev_value, interface="torch", diff_method="backprop")

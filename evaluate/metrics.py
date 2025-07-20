@@ -101,3 +101,24 @@ def calculate_auc(outputs: torch.Tensor, y: torch.Tensor) -> float:
 
     return roc_auc_score(y.cpu().numpy(),
                          outputs.argmax(dim=1).detach().cpu().numpy())
+
+
+from sklearn.metrics import classification_report
+
+def classification_report_by_class(outputs: torch.Tensor, y: torch.Tensor) -> str:
+    """
+    Return classification report string for each class (e.g., Rumor, Non-Rumor).
+
+    Args:
+        outputs (torch.Tensor): Model predictions (logits).
+        y (torch.Tensor): Ground truth labels.
+
+    Returns:
+        str: Formatted classification report string.
+    """
+    y_true = y.cpu().numpy()
+    y_pred = outputs.argmax(dim=1).detach().cpu().numpy()
+    
+    target_names = ['Non-Rumor', 'Rumor']  # ⚠️ 确保你类别标签是 0:非谣言, 1:谣言
+    report = classification_report(y_true, y_pred, target_names=target_names, digits=3)
+    return report
