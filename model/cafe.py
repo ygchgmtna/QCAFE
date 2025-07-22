@@ -113,7 +113,7 @@ class _FastTextCNN(nn.Module):
         self.fast_cnn = nn.ModuleList()
         for kernel in kernel_size:
             self.fast_cnn.append(
-                nn.Sequential(nn.Conv1d(200, channel, kernel_size=kernel),
+                nn.Sequential(nn.Conv1d(768, channel, kernel_size=kernel),
                               nn.BatchNorm1d(channel), nn.ReLU(),
                               nn.AdaptiveMaxPool1d(1)))
 

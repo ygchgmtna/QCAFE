@@ -47,6 +47,7 @@ class CafeTrainer(BaseTrainer):
                          clip_grad_norm, device, early_stopping)
         self.similarity_optimizer = similarity_optimizer
         self.best_f1 = 0.0
+        self.best_batch = -1
         if best_path is not None:
             self.base_path = os.path.join("pth", best_path)
         else:
@@ -114,6 +115,16 @@ class CafeTrainer(BaseTrainer):
                     'detection_loss': detection_loss.item()
                 }
 
+                if f1 > self.best_f1:
+                    self.best_f1 = f1
+                    self.best_batch = batch_id + 1
+
+                    if f1 > 0.8:  # 仍保留你设定的下限
+                        final_path = f"{self.base_path}_epoch{epoch+1}_batch{self.best_batch}.pth"
+                        torch.save(self.model.state_dict(), final_path)
+                        self.logger.info(f"Saved best model to {final_path} with batch-F1: {f1:.4f}")
+                        self.best_path = final_path
+
             avg_acc = total_acc / count
             avg_f1 = total_f1 / count
 
@@ -127,7 +138,7 @@ class CafeTrainer(BaseTrainer):
                 self.best_f1 = avg_f1
                 self.best_epoch = epoch + 1
                 
-                if avg_f1 > 0.3:
+                if avg_f1 > 0.8:
                     final_path =f"{self.base_path}_epoch{self.best_epoch}.pth"
                     torch.save(self.model.state_dict(), final_path)
                     self.logger.info(f"Saved best model to {final_path} with F1: {avg_f1:.4f}")

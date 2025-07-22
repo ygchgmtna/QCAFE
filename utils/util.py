@@ -5,6 +5,7 @@ import random
 
 import numpy as np
 import torch
+import pennylane as qml
 
 
 def set_seed(seed: int):

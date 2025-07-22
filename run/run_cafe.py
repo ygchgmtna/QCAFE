@@ -4,7 +4,7 @@ import yaml
 import torch
 from torch.utils.data import DataLoader
 
-from utils.util import dict2str
+from utils.util import dict2str, set_seed
 from train.cafe_trainer import CafeTrainer
 from evaluate.evaluator import Evaluator
 from preprocess.dataset.cafe_dataset import CafeDataset
@@ -14,6 +14,7 @@ __all__ = ['run_cafe', 'run_cafe_from_yaml']
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("device:", device)
+set_seed(1)  # Set random seed for reproducibility
 
 def run_cafe(dataset_dir: str,
              dataset_name: str = "politifact",
