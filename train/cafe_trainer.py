@@ -10,9 +10,10 @@ import sys, os
 
 from evaluate.evaluator import Evaluator
 from model.cafe import CAFE
-from utils.util import EarlyStopping
+from utils.util import EarlyStopping, set_seed
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# set_seed(42)
 
 class CafeTrainer(BaseTrainer):
     """
@@ -48,6 +49,7 @@ class CafeTrainer(BaseTrainer):
         self.similarity_optimizer = similarity_optimizer
         self.best_f1 = 0.0
         self.best_batch = -1
+        self.det = 1
         if best_path is not None:
             self.base_path = os.path.join("pth", best_path)
         else:
@@ -115,15 +117,15 @@ class CafeTrainer(BaseTrainer):
                     'detection_loss': detection_loss.item()
                 }
 
-                if f1 > self.best_f1:
-                    self.best_f1 = f1
-                    self.best_batch = batch_id + 1
+                # if detection_loss < self.det:
+                #     self.det = detection_loss
+                #     self.best_batch = batch_id + 1
 
-                    if f1 > 0.8:  # 仍保留你设定的下限
-                        final_path = f"{self.base_path}_epoch{epoch+1}_batch{self.best_batch}.pth"
-                        torch.save(self.model.state_dict(), final_path)
-                        self.logger.info(f"Saved best model to {final_path} with batch-F1: {f1:.4f}")
-                        self.best_path = final_path
+                #     if f1 > 0.8:  # 仍保留你设定的下限
+                #         final_path = f"{self.base_path}_epoch{epoch+1}_batch{self.best_batch}.pth"
+                #         torch.save(self.model.state_dict(), final_path)
+                #         self.logger.info(f"Saved best model to {final_path} with best-loss: {detection_loss:.4f}")
+                #         self.best_path = final_path
 
             avg_acc = total_acc / count
             avg_f1 = total_f1 / count

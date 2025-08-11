@@ -14,7 +14,7 @@ __all__ = ['run_cafe', 'run_cafe_from_yaml']
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("device:", device)
-set_seed(1)  # Set random seed for reproducibility
+# set_seed(1)  # Set random seed for reproducibility
 
 def run_cafe(dataset_dir: str,
              dataset_name: str = "politifact",
