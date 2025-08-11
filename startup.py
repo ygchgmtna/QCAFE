@@ -3,18 +3,18 @@ import torch
 import numpy as np
 import os
 
-model_name = 'cafe'
+model_name = 'qattention' # Choose from "cafe". "qattention"
 dataset_name = "weibo"  # Choose from "politifact", "gossipcop", "twitter", "weibo"
 
 args_dict = {
     'dataset_dir': './dataset',
     'dataset_name': dataset_name, 
-    'mode': 'test',  # Mode can be 'train' or 'test'
-    'pretrained_path': f"pth/qaf4_{dataset_name}_epoch3_batch71.pth",  # Path to the pretrained model
-    # 'pretrained_path':"pth/best_model_twitter_88_bs=64.pth",
+    'mode': 'train',  # Mode can be 'train' or 'test'
+    # 'pretrained_path': f"pth/qaf4_{dataset_name}_epoch1.pth",  # Path to the pretrained model
+    # 'pretrained_path':"pth/qaf4b_1_weibo_3e_4_epoch1.pth",
     'batch_size': 64,
-    'lr': 1e-3, 
-    'epoch_num' :5,
+    'lr': 5e-5, 
+    'epoch_num' :2,
     # 'best_path': f"zxz2+crx+q_{dataset_name}",  # Path to save the best model
     'best_path': f"qaf4_{dataset_name}"
 }
