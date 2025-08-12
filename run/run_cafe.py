@@ -2,8 +2,7 @@ from typing import List
 
 import yaml
 import torch
-from torch.utils.data import DataLoader
-
+from torch.utils.data import DataLoader, WeightedRandomSampler
 from utils.util import dict2str, set_seed
 from train.cafe_trainer import CafeTrainer
 from evaluate.evaluator import Evaluator
@@ -14,7 +13,6 @@ __all__ = ['run_cafe', 'run_cafe_from_yaml']
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("device:", device)
-# set_seed(1)  # Set random seed for reproducibility
 
 def run_cafe(dataset_dir: str,
              dataset_name: str = "politifact",
@@ -46,11 +44,32 @@ def run_cafe(dataset_dir: str,
         "{}/{}/train_image_with_label.npz".format(dataset_dir, dataset_name))
     test_set = CafeDataset(
         "{}/{}/test_text_with_label.npz".format(dataset_dir, dataset_name),
-        "{}/{}/test_image_with_label.npz".format(dataset_dir, dataset_name)) 
+        "{}/{}/test_image_with_label.npz".format(dataset_dir, dataset_name))
+
+    # ====== 采样权重——只对训练集 ======
+    import numpy as np, torch
+    labels_np = train_set.label.numpy()              # (N,)
+    classes, counts = np.unique(labels_np, return_counts=True)
+    minor_cls = classes[np.argmin(counts)]
+    major_cls = classes[np.argmax(counts)]
+    target_p = {int(minor_cls): 0.1, int(major_cls): 0.9}   # 目标比例 1:9
+    print(f"采样比例：{target_p}")
+
+    # 每样本权重：目标占比 / 该类样本数
+    cls2idx = {int(c): i for i, c in enumerate(classes)}
+    class_weight = {int(c): (target_p[int(c)] / counts[cls2idx[int(c)]]) for c in classes}
+    sample_weight = np.array([class_weight[int(c)] for c in labels_np], dtype=np.float64)
+
+    sampler = WeightedRandomSampler(
+        weights=torch.tensor(sample_weight, dtype=torch.double),
+        num_samples=len(labels_np),     # 每个 epoch 的样本数；可按需增大比如 int(1.5*len(labels_np))
+        replacement=True
+    ) 
                                    
     train_loader = DataLoader(train_set,
                               batch_size=batch_size,
-                              shuffle=True,
+                              sampler=sampler,
+                              shuffle=False,
                               drop_last=True)
     test_loader = DataLoader(test_set,
                              batch_size=batch_size,
