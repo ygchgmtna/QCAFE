@@ -1,7 +1,7 @@
 # model/qattention.py
 import torch
 import torch.nn as nn
-from model.QA_flexible import QuantumAttention
+from model.QAFv2 import QuantumAttention
 from model.cafe import _TextImageEncoder
 
 class QAttention(nn.Module):

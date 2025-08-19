@@ -297,6 +297,7 @@ class BaseTrainer(AbstractTrainer):
         """
         if pretrained_path is not None:
             self.model.load_state_dict(torch.load(pretrained_path, map_location=self.device, weights_only=True))
+            
             self.logger.info(f"Loaded pretrained model from {pretrained_path}")
         else:
             self.model.load_state_dict(torch.load(self.best_path, map_location=self.device, weights_only=True))

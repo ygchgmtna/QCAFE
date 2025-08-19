@@ -52,18 +52,20 @@ def run_cafe(dataset_dir: str,
     classes, counts = np.unique(labels_np, return_counts=True)
     minor_cls = classes[np.argmin(counts)]
     major_cls = classes[np.argmax(counts)]
-    target_p = {int(minor_cls): 0.1, int(major_cls): 0.9}   # 目标比例 1:9
+    target_p = {1: 0.9, 0: 0.1}   # 目标比例 1:9
     print(f"采样比例：{target_p}")
 
     # 每样本权重：目标占比 / 该类样本数
     cls2idx = {int(c): i for i, c in enumerate(classes)}
     class_weight = {int(c): (target_p[int(c)] / counts[cls2idx[int(c)]]) for c in classes}
     sample_weight = np.array([class_weight[int(c)] for c in labels_np], dtype=np.float64)
-
+    g = torch.Generator()
+    g.manual_seed(42) 
     sampler = WeightedRandomSampler(
         weights=torch.tensor(sample_weight, dtype=torch.double),
         num_samples=len(labels_np),     # 每个 epoch 的样本数；可按需增大比如 int(1.5*len(labels_np))
-        replacement=True
+        replacement=True,
+        generator=g
     ) 
                                    
     train_loader = DataLoader(train_set,

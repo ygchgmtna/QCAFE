@@ -119,6 +119,6 @@ def classification_report_by_class(outputs: torch.Tensor, y: torch.Tensor) -> st
     y_true = y.cpu().numpy()
     y_pred = outputs.argmax(dim=1).detach().cpu().numpy()
     
-    target_names = ['Non-Rumor', 'Rumor']  # ⚠️ 确保你类别标签是 0:非谣言, 1:谣言
+    target_names = ['Fake', 'Real']  # ⚠️ 确保你类别标签是 0:假, 1:真
     report = classification_report(y_true, y_pred, target_names=target_names, digits=3)
     return report

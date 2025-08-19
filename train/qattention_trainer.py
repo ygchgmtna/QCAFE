@@ -66,16 +66,26 @@ class QAttentionTrainer(BaseTrainer):
                 pbar.set_postfix_str(f"det={detection_loss.item():.4f}, acc={acc:.4f}, f1={f1:.4f}")
 
                 # 保存 best
-                if f1 > self.best_f1:
-                    self.best_f1 = f1
-                    if f1 > 0.8:
-                        final_path = f"{self.base_path}_epoch{epoch+1}_batch{batch_id+1}.pth"
-                        torch.save(self.model.state_dict(), final_path)
-                        self.logger.info(f"Saved best model to {final_path} with F1: {f1:.4f}")
-                        self.best_path = final_path
+                # if f1 > self.best_f1:
+                #     self.best_f1 = f1
+                #     if f1 > 0.8:
+                #         final_path = f"{self.base_path}_epoch{epoch+1}_batch{batch_id+1}.pth"
+                #         torch.save(self.model.state_dict(), final_path)
+                #         self.logger.info(f"Saved best model to {final_path} with F1: {f1:.4f}")
+                #         self.best_path = final_path
 
             avg_acc = total_acc / count
             avg_f1 = total_f1 / count
             self.logger.info(f"[Epoch {epoch+1}] Avg Train Acc: {avg_acc:.4f}, Avg F1: {avg_f1:.4f}")
+
+            if avg_f1 > self.best_f1:
+                self.best_f1 = avg_f1
+                self.best_epoch = epoch + 1
+                
+                if avg_f1 > 0.8:
+                    final_path =f"{self.base_path}_epoch{self.best_epoch}.pth"
+                    torch.save(self.model.state_dict(), final_path)
+                    self.logger.info(f"Saved best model to {final_path} with F1: {avg_f1:.4f}")
+                    self.best_path = final_path
 
         return {"detection_loss": detection_loss.item()}
