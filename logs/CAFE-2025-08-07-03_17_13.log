@@ -1,0 +1,39 @@
+2025-08-07 03:17:13,399 - INFO - training data size=603
+2025-08-07 03:17:13,399 - INFO - ----start training-----
+
+2025-08-07 03:17:13,399 - INFO - epoch=[1/5]
+2025-08-07 03:18:26,815 - INFO - [Epoch 1] Avg Train Acc: 0.5399, Avg F1: 0.5302
+2025-08-07 03:18:26,829 - INFO - Saved best model to pth/qaf_1_pheme_epoch1.pth with F1: 0.5302
+2025-08-07 03:18:26,967 - INFO - training loss : similarity_loss=0.500553    detection_loss=0.693948
+2025-08-07 03:18:26,967 - INFO - training time=1m13s
+2025-08-07 03:18:26,969 - INFO - epoch=[2/5]
+2025-08-07 03:19:40,359 - INFO - [Epoch 2] Avg Train Acc: 0.6319, Avg F1: 0.6292
+2025-08-07 03:19:40,374 - INFO - Saved best model to pth/qaf_1_pheme_epoch2.pth with F1: 0.6292
+2025-08-07 03:19:40,504 - INFO - training loss : similarity_loss=0.479350    detection_loss=0.679290
+2025-08-07 03:19:40,504 - INFO - training time=1m13s
+2025-08-07 03:19:40,504 - INFO - epoch=[3/5]
+2025-08-07 03:20:54,377 - INFO - [Epoch 3] Avg Train Acc: 0.5990, Avg F1: 0.5970
+2025-08-07 03:20:54,504 - INFO - training loss : similarity_loss=0.494178    detection_loss=0.664171
+2025-08-07 03:20:54,504 - INFO - training time=1m13s
+2025-08-07 03:20:54,504 - INFO - epoch=[4/5]
+2025-08-07 03:22:07,171 - INFO - [Epoch 4] Avg Train Acc: 0.6267, Avg F1: 0.6241
+2025-08-07 03:22:07,301 - INFO - training loss : similarity_loss=0.479609    detection_loss=0.641612
+2025-08-07 03:22:07,302 - INFO - training time=1m12s
+2025-08-07 03:22:07,302 - INFO - epoch=[5/5]
+2025-08-07 03:23:14,038 - INFO - [Epoch 5] Avg Train Acc: 0.6059, Avg F1: 0.6033
+2025-08-07 03:23:14,179 - INFO - training loss : similarity_loss=0.492807    detection_loss=0.645141
+2025-08-07 03:23:14,179 - INFO - training time=1m6s
+2025-08-07 03:23:14,205 - INFO - Loaded best model from pth/qaf_1_pheme_epoch2.pth
+2025-08-07 03:23:19,284 - INFO - 
+              precision    recall  f1-score   support
+
+   Non-Rumor      0.447     0.493     0.469        69
+       Rumor      0.533     0.488     0.510        82
+
+    accuracy                          0.490       151
+   macro avg      0.490     0.490     0.489       151
+weighted avg      0.494     0.490     0.491       151
+
+2025-08-07 03:23:19,288 - INFO - training data size=603
+2025-08-07 03:23:19,288 - INFO - test data size=151
+2025-08-07 03:23:19,288 - INFO - test result: accuracy=0.490066    precision=0.533333    recall=0.487805    f1=0.509554

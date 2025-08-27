@@ -1,0 +1,22 @@
+2025-08-14 13:37:55,673 - INFO - training data size=11847
+2025-08-14 13:37:55,673 - INFO - ----start training-----
+
+2025-08-14 13:37:55,673 - INFO - epoch=[1/1]
+2025-08-14 14:04:45,900 - INFO - [Epoch 1] Avg Train Acc: 0.9285, Avg F1: 0.9279
+2025-08-14 14:04:45,912 - INFO - Saved best model to pth/qaf4_1_twitter_6e_4_42_1_1_2_epoch1.pth with F1: 0.9279
+2025-08-14 14:04:46,058 - INFO - training loss : similarity_loss=0.375911    detection_loss=0.105286
+2025-08-14 14:04:46,058 - INFO - training time=26m50s
+2025-08-14 14:04:46,112 - INFO - Loaded best model from pth/qaf4_1_twitter_6e_4_42_1_1_2_epoch1.pth
+2025-08-14 14:05:41,511 - INFO - 
+              precision    recall  f1-score   support
+
+        Fake      0.690     0.983     0.811       689
+        Real      0.972     0.576     0.723       717
+
+    accuracy                          0.775      1406
+   macro avg      0.831     0.779     0.767      1406
+weighted avg      0.834     0.775     0.766      1406
+
+2025-08-14 14:05:41,516 - INFO - training data size=11847
+2025-08-14 14:05:41,516 - INFO - test data size=1406
+2025-08-14 14:05:41,516 - INFO - test result: accuracy=0.775249    precision=0.971765    recall=0.576011    f1=0.723292

@@ -1,0 +1,30 @@
+2025-07-15 22:08:30,954 - INFO - training data size=7445
+2025-07-15 22:08:30,955 - INFO - ----start training-----
+
+2025-07-15 22:08:30,955 - INFO - epoch=[1/5]
+2025-07-15 22:25:05,105 - INFO - [Epoch 1] Avg Train Acc: 0.8291, Avg F1: 0.8272
+2025-07-15 22:25:05,125 - INFO - Saved best model to pth/qam_weibo_epoch1.pth with F1: 0.8272
+2025-07-15 22:25:05,350 - INFO - training loss : similarity_loss=0.448674    detection_loss=0.222923
+2025-07-15 22:25:05,350 - INFO - training time=16m34s
+2025-07-15 22:25:05,354 - INFO - epoch=[2/5]
+2025-07-15 22:41:49,295 - INFO - [Epoch 2] Avg Train Acc: 0.9030, Avg F1: 0.9022
+2025-07-15 22:41:49,308 - INFO - Saved best model to pth/qam_weibo_epoch2.pth with F1: 0.9022
+2025-07-15 22:41:49,437 - INFO - training loss : similarity_loss=0.311784    detection_loss=0.230920
+2025-07-15 22:41:49,438 - INFO - training time=16m44s
+2025-07-15 22:41:49,440 - INFO - epoch=[3/5]
+2025-07-15 22:57:06,434 - INFO - [Epoch 3] Avg Train Acc: 0.9010, Avg F1: 0.9001
+2025-07-15 22:57:06,576 - INFO - training loss : similarity_loss=0.340363    detection_loss=0.268395
+2025-07-15 22:57:06,576 - INFO - training time=15m17s
+2025-07-15 22:57:06,581 - INFO - epoch=[4/5]
+2025-07-15 23:13:11,662 - INFO - [Epoch 4] Avg Train Acc: 0.9050, Avg F1: 0.9042
+2025-07-15 23:13:11,679 - INFO - Saved best model to pth/qam_weibo_epoch4.pth with F1: 0.9042
+2025-07-15 23:13:11,830 - INFO - training loss : similarity_loss=0.402049    detection_loss=0.300711
+2025-07-15 23:13:11,830 - INFO - training time=16m5s
+2025-07-15 23:13:11,830 - INFO - epoch=[5/5]
+2025-07-15 23:29:49,766 - INFO - [Epoch 5] Avg Train Acc: 0.9042, Avg F1: 0.9036
+2025-07-15 23:29:49,895 - INFO - training loss : similarity_loss=0.320585    detection_loss=0.137252
+2025-07-15 23:29:49,896 - INFO - training time=16m38s
+2025-07-15 23:29:49,924 - INFO - Loaded best model from pth/qam_weibo_epoch4.pth
+2025-07-15 23:30:54,132 - INFO - training data size=7445
+2025-07-15 23:30:54,132 - INFO - test data size=1969
+2025-07-15 23:30:54,132 - INFO - test result: accuracy=0.820213    precision=0.816265    recall=0.826220    f1=0.821212

@@ -1,0 +1,31 @@
+2025-07-16 20:36:49,610 - INFO - training data size=7445
+2025-07-16 20:36:49,610 - INFO - ----start training-----
+
+2025-07-16 20:36:49,610 - INFO - epoch=[1/5]
+2025-07-16 20:53:14,053 - INFO - [Epoch 1] Avg Train Acc: 0.8244, Avg F1: 0.8221
+2025-07-16 20:53:14,067 - INFO - Saved best model to pth/qam_weibo_epoch1.pth with F1: 0.8221
+2025-07-16 20:53:14,204 - INFO - training loss : similarity_loss=0.424455    detection_loss=0.194279
+2025-07-16 20:53:14,204 - INFO - training time=16m24s
+2025-07-16 20:53:14,205 - INFO - epoch=[2/5]
+2025-07-16 21:09:27,773 - INFO - [Epoch 2] Avg Train Acc: 0.8955, Avg F1: 0.8947
+2025-07-16 21:09:27,789 - INFO - Saved best model to pth/qam_weibo_epoch2.pth with F1: 0.8947
+2025-07-16 21:09:27,930 - INFO - training loss : similarity_loss=0.421877    detection_loss=0.321613
+2025-07-16 21:09:27,930 - INFO - training time=16m13s
+2025-07-16 21:09:27,930 - INFO - epoch=[3/5]
+2025-07-16 21:25:42,467 - INFO - [Epoch 3] Avg Train Acc: 0.8984, Avg F1: 0.8975
+2025-07-16 21:25:42,481 - INFO - Saved best model to pth/qam_weibo_epoch3.pth with F1: 0.8975
+2025-07-16 21:25:42,632 - INFO - training loss : similarity_loss=0.339896    detection_loss=0.200775
+2025-07-16 21:25:42,633 - INFO - training time=16m14s
+2025-07-16 21:25:42,633 - INFO - epoch=[4/5]
+2025-07-16 21:41:59,580 - INFO - [Epoch 4] Avg Train Acc: 0.8980, Avg F1: 0.8971
+2025-07-16 21:41:59,756 - INFO - training loss : similarity_loss=0.412007    detection_loss=0.263862
+2025-07-16 21:41:59,757 - INFO - training time=16m17s
+2025-07-16 21:41:59,757 - INFO - epoch=[5/5]
+2025-07-16 21:58:04,733 - INFO - [Epoch 5] Avg Train Acc: 0.9065, Avg F1: 0.9056
+2025-07-16 21:58:04,747 - INFO - Saved best model to pth/qam_weibo_epoch5.pth with F1: 0.9056
+2025-07-16 21:58:04,893 - INFO - training loss : similarity_loss=0.387809    detection_loss=0.206351
+2025-07-16 21:58:04,893 - INFO - training time=16m5s
+2025-07-16 21:58:04,944 - INFO - Loaded best model from pth/qam_weibo_epoch5.pth
+2025-07-16 21:59:13,635 - INFO - training data size=7445
+2025-07-16 21:59:13,636 - INFO - test data size=1969
+2025-07-16 21:59:13,636 - INFO - test result: accuracy=0.817674    precision=0.797903    recall=0.850610    f1=0.823414

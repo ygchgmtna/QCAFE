@@ -1,0 +1,37 @@
+2025-08-10 15:21:43,142 - INFO - training data size=7445
+2025-08-10 15:21:43,142 - INFO - ----start training-----
+
+2025-08-10 15:21:43,142 - INFO - epoch=[1/4]
+2025-08-10 15:38:24,394 - INFO - [Epoch 1] Avg Train Acc: 0.9589, Avg F1: 0.9568
+2025-08-10 15:38:24,408 - INFO - Saved best model to pth/qaf4b_4_weibo_6e_4_64_epoch1.pth with F1: 0.9568
+2025-08-10 15:38:24,539 - INFO - training loss : similarity_loss=0.478830    detection_loss=0.024931
+2025-08-10 15:38:24,539 - INFO - training time=16m41s
+2025-08-10 15:38:24,539 - INFO - epoch=[2/4]
+2025-08-10 15:55:21,154 - INFO - [Epoch 2] Avg Train Acc: 0.9908, Avg F1: 0.9906
+2025-08-10 15:55:21,167 - INFO - Saved best model to pth/qaf4b_4_weibo_6e_4_64_epoch2.pth with F1: 0.9906
+2025-08-10 15:55:21,299 - INFO - training loss : similarity_loss=0.423264    detection_loss=0.019627
+2025-08-10 15:55:21,299 - INFO - training time=16m56s
+2025-08-10 15:55:21,299 - INFO - epoch=[3/4]
+2025-08-10 16:11:33,112 - INFO - [Epoch 3] Avg Train Acc: 0.9914, Avg F1: 0.9912
+2025-08-10 16:11:33,126 - INFO - Saved best model to pth/qaf4b_4_weibo_6e_4_64_epoch3.pth with F1: 0.9912
+2025-08-10 16:11:33,264 - INFO - training loss : similarity_loss=0.372961    detection_loss=0.048577
+2025-08-10 16:11:33,265 - INFO - training time=16m11s
+2025-08-10 16:11:33,265 - INFO - epoch=[4/4]
+2025-08-10 16:27:14,958 - INFO - [Epoch 4] Avg Train Acc: 0.9921, Avg F1: 0.9919
+2025-08-10 16:27:14,973 - INFO - Saved best model to pth/qaf4b_4_weibo_6e_4_64_epoch4.pth with F1: 0.9919
+2025-08-10 16:27:15,115 - INFO - training loss : similarity_loss=0.342224    detection_loss=0.028273
+2025-08-10 16:27:15,116 - INFO - training time=15m41s
+2025-08-10 16:27:15,154 - INFO - Loaded best model from pth/qaf4b_4_weibo_6e_4_64_epoch4.pth
+2025-08-10 16:28:28,058 - INFO - 
+              precision    recall  f1-score   support
+
+   Non-Rumor      0.894     0.867     0.880       985
+       Rumor      0.871     0.897     0.884       984
+
+    accuracy                          0.882      1969
+   macro avg      0.883     0.882     0.882      1969
+weighted avg      0.883     0.882     0.882      1969
+
+2025-08-10 16:28:28,063 - INFO - training data size=7445
+2025-08-10 16:28:28,063 - INFO - test data size=1969
+2025-08-10 16:28:28,063 - INFO - test result: accuracy=0.882174    precision=0.870809    recall=0.897358    f1=0.883884

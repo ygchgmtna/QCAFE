@@ -1,0 +1,41 @@
+2025-08-07 04:49:15,755 - INFO - training data size=7445
+2025-08-07 04:49:15,755 - INFO - ----start training-----
+
+2025-08-07 04:49:15,755 - INFO - epoch=[1/5]
+2025-08-07 05:07:26,287 - INFO - [Epoch 1] Avg Train Acc: 0.9709, Avg F1: 0.9704
+2025-08-07 05:07:26,300 - INFO - Saved best model to pth/qaf_5_weibo_epoch1.pth with F1: 0.9704
+2025-08-07 05:07:26,436 - INFO - training loss : similarity_loss=0.393262    detection_loss=0.024725
+2025-08-07 05:07:26,439 - INFO - training time=18m10s
+2025-08-07 05:07:26,439 - INFO - epoch=[2/5]
+2025-08-07 05:26:03,673 - INFO - [Epoch 2] Avg Train Acc: 0.9875, Avg F1: 0.9871
+2025-08-07 05:26:03,687 - INFO - Saved best model to pth/qaf_5_weibo_epoch2.pth with F1: 0.9871
+2025-08-07 05:26:03,833 - INFO - training loss : similarity_loss=0.336882    detection_loss=0.019127
+2025-08-07 05:26:03,834 - INFO - training time=18m37s
+2025-08-07 05:26:03,836 - INFO - epoch=[3/5]
+2025-08-07 05:44:12,333 - INFO - [Epoch 3] Avg Train Acc: 0.9898, Avg F1: 0.9895
+2025-08-07 05:44:12,347 - INFO - Saved best model to pth/qaf_5_weibo_epoch3.pth with F1: 0.9895
+2025-08-07 05:44:12,479 - INFO - training loss : similarity_loss=0.271775    detection_loss=0.015947
+2025-08-07 05:44:12,483 - INFO - training time=18m8s
+2025-08-07 05:44:12,483 - INFO - epoch=[4/5]
+2025-08-07 06:00:52,963 - INFO - [Epoch 4] Avg Train Acc: 0.9911, Avg F1: 0.9909
+2025-08-07 06:00:52,976 - INFO - Saved best model to pth/qaf_5_weibo_epoch4.pth with F1: 0.9909
+2025-08-07 06:00:53,107 - INFO - training loss : similarity_loss=0.342190    detection_loss=0.022607
+2025-08-07 06:00:53,110 - INFO - training time=16m40s
+2025-08-07 06:00:53,111 - INFO - epoch=[5/5]
+2025-08-07 06:17:51,394 - INFO - [Epoch 5] Avg Train Acc: 0.9911, Avg F1: 0.9908
+2025-08-07 06:17:51,531 - INFO - training loss : similarity_loss=0.285223    detection_loss=0.020621
+2025-08-07 06:17:51,531 - INFO - training time=16m58s
+2025-08-07 06:17:51,560 - INFO - Loaded best model from pth/qaf_5_weibo_epoch4.pth
+2025-08-07 06:18:56,188 - INFO - 
+              precision    recall  f1-score   support
+
+   Non-Rumor      0.871     0.831     0.851       985
+       Rumor      0.839     0.877     0.857       984
+
+    accuracy                          0.854      1969
+   macro avg      0.855     0.854     0.854      1969
+weighted avg      0.855     0.854     0.854      1969
+
+2025-08-07 06:18:56,193 - INFO - training data size=7445
+2025-08-07 06:18:56,193 - INFO - test data size=1969
+2025-08-07 06:18:56,193 - INFO - test result: accuracy=0.854241    precision=0.838678    recall=0.877033    f1=0.857427

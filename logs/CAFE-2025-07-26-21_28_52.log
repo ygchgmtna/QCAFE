@@ -1,0 +1,22 @@
+2025-07-26 21:28:52,625 - INFO - training data size=1686
+2025-07-26 21:28:52,626 - INFO - ----start training-----
+
+2025-07-26 21:28:52,626 - INFO - epoch=[1/1]
+2025-07-26 21:32:13,345 - INFO - [Epoch 1] Avg Train Acc: 0.7127, Avg F1: 0.5174
+2025-07-26 21:32:13,359 - INFO - Saved best model to pth/qaf_pheme_epoch1.pth with F1: 0.5174
+2025-07-26 21:32:13,528 - INFO - training loss : similarity_loss=0.493425    detection_loss=0.618656
+2025-07-26 21:32:13,528 - INFO - training time=3m20s
+2025-07-26 21:32:13,553 - INFO - Loaded best model from pth/qaf_pheme_epoch1.pth
+2025-07-26 21:32:27,685 - INFO - 
+              precision    recall  f1-score   support
+
+   Non-Rumor      0.740     0.294     0.420       126
+       Rumor      0.761     0.956     0.847       296
+
+    accuracy                          0.758       422
+   macro avg      0.750     0.625     0.634       422
+weighted avg      0.755     0.758     0.720       422
+
+2025-07-26 21:32:27,689 - INFO - training data size=1686
+2025-07-26 21:32:27,689 - INFO - test data size=422
+2025-07-26 21:32:27,689 - INFO - test result: accuracy=0.758294    precision=0.760753    recall=0.956081    f1=0.847305

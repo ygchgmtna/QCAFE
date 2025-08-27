@@ -7,7 +7,7 @@ from torch import Tensor
 from torch.distributions import Normal, Independent
 from torch.nn.functional import softplus
 from model.model import AbstractModel
-from model.QA_s import QuantumAttention
+from model.QAFv2 import QuantumAttention, QAFConfig
 from model.QClassifier import QuantumClassifier
 
 
@@ -24,36 +24,40 @@ class CAFE(AbstractModel):
     paper: https://dl.acm.org/doi/10.1145/3485447.3511968
     code: https://github.com/cyxanna/CAFE
     """
-    def __init__(self, feature_dim=64 + 16 + 16, h_dim=64):
+    def __init__(self, feature_dim=64 + 16 + 16, h_dim=64, beta: float = 0.5):
         """
         Args:
             feature_dim (int): number of feature dim
             h_dim (int): number of hidden dim
+            beta (float): weight for similarity (alignment) loss, default=0.5
         """
         super(CAFE, self).__init__()
         self.device = device
+        self.beta = beta  # <<< 关键：新增
+
         self.encoding = _TextImageEncoder()
         self.ambiguity_module = _AmbiguityModule()
         self.uni_modal = _UnimodalModule()
         # self.cross_modal = _CrossModalModule()
-        self.cross_modal = QuantumAttention(in_embed=64)
+        self.cross_modal = QuantumAttention(in_embed=64, 
+                                            config=QAFConfig(use_two_ring=True, 
+                                                             use_shifted_cross=True, 
+                                                             use_anneal=True)).to(self.device)
         self.loss_func_detection = torch.nn.CrossEntropyLoss()
-        self.classifier = nn.Sequential(nn.Linear(40, h_dim),
-                                        nn.BatchNorm1d(h_dim), nn.ReLU(),
-                                        nn.Linear(h_dim, h_dim),
-                                        nn.BatchNorm1d(h_dim), nn.ReLU(),
-                                        nn.Linear(h_dim, 2))
+        self.classifier = nn.Sequential(
+            nn.Linear(40, h_dim),
+            nn.BatchNorm1d(h_dim), nn.ReLU(),
+            nn.Linear(h_dim, h_dim),
+            nn.BatchNorm1d(h_dim), nn.ReLU(),
+            nn.Linear(h_dim, 2)
+        )
         # self.classifier = QuantumClassifier()
+
         self.similarity_module = _SimilarityModule()
+        # 与论文一致：设置 margin=0.2
+        self.similarity_module.loss_func_similarity = torch.nn.CosineEmbeddingLoss(margin=0.2)
 
     def forward(self, text: torch.Tensor, image: torch.Tensor) -> Tensor:
-        """
-        Args:
-            text (Tensor): the raw text, shape=(batch_size, 30, 200)
-            image (Tensor): the raw image, shape=(batch_size, 512)
-        Returns:
-            Tensor: prediction of being fake news, shape=(batch_size, 2)
-        """
         text_aligned, image_aligned, _ = self.similarity_module(text, image)
         skl = self.ambiguity_module(text_aligned, image_aligned)
         correlation = self.cross_modal(text_aligned, image_aligned)
@@ -67,26 +71,21 @@ class CAFE(AbstractModel):
         corre_final = weight_corre * correlation
         final_corre = torch.cat([text_final, img_final, corre_final], 1)
         out = self.classifier(final_corre)
-
-        # for name, param in self.similarity_module.named_parameters():
-        #     if param.grad is None:
-        #         print(f"{name} has no gradient!")
         return out
 
     def calculate_loss(self, data: Dict[str, Tensor]) -> Tensor:
         """
-        calculate loss via CrossEntropyLoss
-        Args:
-            data (Dict[str, Tensor]): batch data with text, image, label
-        Returns:
-            torch.Tensor: loss
+        Joint loss: detection loss + beta * similarity (alignment) loss
         """
-        text = data['text']
-        image = data['image']
-        label = data['label']
-        pre_detection = self.forward(text, image)
-        loss_detection = self.loss_func_detection(pre_detection, label)
-        return loss_detection
+        text = data['text']; image = data['image']; label = data['label']
+        logits = self.forward(text, image)
+        loss_detection = self.loss_func_detection(logits, label)
+        loss_similarity = self.similarity_module.calculate_loss(data)
+
+        # 保险写法：即使对象上暂时没有 beta 属性，也给默认 0.5，不会再 AttributeError
+        beta = getattr(self, 'beta', 0.5)
+        total_loss = loss_detection + beta * loss_similarity
+        return total_loss
 
     def predict(self, data: Dict[str, Tensor]) -> Tensor:
         """
@@ -160,7 +159,8 @@ class _TextImageEncoder(nn.Module):
             nn.Linear(128, 64), nn.BatchNorm1d(64), nn.ReLU(), nn.Dropout(),
             nn.Linear(64, shared_text_dim), nn.BatchNorm1d(shared_text_dim),
             nn.ReLU())
-        self.shared_image = nn.Sequential(nn.Linear(512, 256),
+        self.shared_image = nn.Sequential(
+                                          nn.Linear(512, 256),
                                           nn.BatchNorm1d(256), nn.ReLU(),
                                           nn.Dropout(),
                                           nn.Linear(256, shared_image_dim),
@@ -194,7 +194,7 @@ class _SimilarityModule(AbstractModel):
         """
         super(_SimilarityModule, self).__init__()
         self.encoding = _TextImageEncoder()
-        self.loss_func_similarity = torch.nn.CosineEmbeddingLoss()
+        self.loss_func_similarity = torch.nn.CosineEmbeddingLoss(margin=0.2)
         self.text_aligner = nn.Sequential(nn.Linear(shared_dim, shared_dim),
                                           nn.BatchNorm1d(shared_dim),
                                           nn.ReLU(),

@@ -1,0 +1,22 @@
+2025-08-13 14:02:22,885 - INFO - training data size=7445
+2025-08-13 14:02:22,885 - INFO - ----start training-----
+
+2025-08-13 14:02:22,885 - INFO - epoch=[1/1]
+2025-08-13 14:19:33,748 - INFO - [Epoch 1] Avg Train Acc: 0.9671, Avg F1: 0.9668
+2025-08-13 14:19:33,762 - INFO - Saved best model to pth/qaf4_1_weibo_6e_4_42_1_1_1_epoch1.pth with F1: 0.9668
+2025-08-13 14:19:33,899 - INFO - training loss : similarity_loss=0.450840    detection_loss=0.032512
+2025-08-13 14:19:33,900 - INFO - training time=17m11s
+2025-08-13 14:19:33,954 - INFO - Loaded best model from pth/qaf4_1_weibo_6e_4_42_1_1_1_epoch1.pth
+2025-08-13 14:20:50,791 - INFO - 
+              precision    recall  f1-score   support
+
+        Fake      0.873     0.890     0.881       985
+        Real      0.888     0.870     0.879       984
+
+    accuracy                          0.880      1969
+   macro avg      0.880     0.880     0.880      1969
+weighted avg      0.880     0.880     0.880      1969
+
+2025-08-13 14:20:50,795 - INFO - training data size=7445
+2025-08-13 14:20:50,796 - INFO - test data size=1969
+2025-08-13 14:20:50,796 - INFO - test result: accuracy=0.880142    precision=0.887967    recall=0.869919    f1=0.878850
