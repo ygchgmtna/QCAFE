@@ -1,9 +1,0 @@
-2025-08-11 13:59:13,613 - INFO - training data size=7445
-2025-08-11 13:59:13,613 - INFO - ----start training-----
-
-2025-08-11 13:59:13,613 - INFO - epoch=[1/1]
-2025-08-11 14:00:25,792 - INFO - Saved best model to pth/qaf4b_1_weibo_6e_4_64_epoch1_batch6.pth with batch-F1: 0.8551
-2025-08-11 14:00:39,105 - INFO - Saved best model to pth/qaf4b_1_weibo_6e_4_64_epoch1_batch7.pth with batch-F1: 0.9214
-2025-08-11 14:01:04,555 - INFO - Saved best model to pth/qaf4b_1_weibo_6e_4_64_epoch1_batch9.pth with batch-F1: 0.9373
-2025-08-11 14:01:29,398 - INFO - Saved best model to pth/qaf4b_1_weibo_6e_4_64_epoch1_batch11.pth with batch-F1: 0.9375
-2025-08-11 14:01:55,812 - INFO - Saved best model to pth/qaf4b_1_weibo_6e_4_64_epoch1_batch13.pth with batch-F1: 1.0000
